@@ -1,0 +1,45 @@
+DRONE to SERVER:
+
+The character 'S' followed by values from any sensors the drone wants to send, 
+separated by ':' characters, like this:
+
+    S{sensor}:...:{sensor}
+
+The format for each sensor can be one of:
+
+    Gyroscope:
+    GX/Y/Z
+
+    Accelerometer:
+    AX/Y/Z
+
+    Barometer:
+    BX
+
+    Position:
+    PX/Z
+
+So, a possible message would be:
+
+    SG1.2/6/2.3:A0/0/2
+
+Representing values for both the gyroscope and the accelerometer.
+
+####
+
+SERVER to DRONE:
+
+The server needs to tell the drone what percentage to set its motors to, so it
+can send the following message type:
+
+    MA/B/C/D
+
+To set the speeds of the motors A, B, C, and D. The values can be between 0 and
+100, as a percentage of the max motor speed. For example:
+
+    M60.3/80.05/50/73
+
+####
+
+Additionally, if a message begins with the character 'I', then, its interpreted
+as simply being information, which the server may just print to the terminal.

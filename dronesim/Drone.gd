@@ -6,7 +6,7 @@ var server_port = 14444
 var sock = PacketPeerUDP.new()
 var registered = false
 var send_elapsed = 0
-var sensrate = 1
+var sensrate = 10
 
 # Linear acceleration
 var linacc
@@ -38,7 +38,6 @@ func _ready():
 	else:
 		sock.set_dest_address(server_addr, server_port)
 		sock.put_packet("N".to_ascii()) # Register self with server
-		
 
 func add_force_local(force: Vector3, pos: Vector3):
 	var pos_local = self.transform.basis.xform(pos)
@@ -49,15 +48,18 @@ func _physics_process(delta):
 	if v0 and a0:
 		linacc = (self.linear_velocity - v0) / delta
 		rotacc = (self.angular_velocity - a0) / delta
+		
+		send_elapsed += delta
+		if send_elapsed >= 1/sensrate:
+			sock.put_packet(("SP" + str(self.translation[0]) 
+				+ "/" + str(self.translation[2])
+				+ ":G" + str(self.rotacc[0]) + "/" + str(self.rotacc[1]) + "/" + str(self.rotacc[2])
+				+ ":A" + str(self.linacc[0]) + "/" + str(self.linacc[1]) + "/" + str(self.linacc[2])
+				).to_ascii())
+			send_elapsed = 0
 	v0 = self.linear_velocity
 	a0 = self.angular_velocity
 	
-	send_elapsed += delta
-	if send_elapsed >= 1/sensrate:
-		print(linacc, rotacc)
-		sock.put_packet(("SP" + str(self.translation[0]) 
-			+ "/" + str(self.translation[2])).to_ascii())
-		send_elapsed = 0
 	for i in range(sock.get_available_packet_count()):
 		var msg = sock.get_packet().get_string_from_ascii()
 		print("From server: ", msg)
