@@ -1,6 +1,6 @@
 extends RigidBody
 
-const power = 4.5
+const power = 10
 var server_addr = "127.0.0.1"
 var server_port = 14444
 var sock = PacketPeerUDP.new()
@@ -63,36 +63,11 @@ func _physics_process(delta):
 	for i in range(sock.get_available_packet_count()):
 		var msg = sock.get_packet().get_string_from_ascii()
 		print("From server: ", msg)
-	
-	mots = [0,0,0,0]
-	
-	if Input.is_action_pressed("w"):
-		mots[2] += power
-		mots[3] += power
-	if Input.is_action_pressed("a"):
-		mots[1] += power
-		mots[3] += power
-	if Input.is_action_pressed("s"):
-		mots[0] += power
-		mots[1] += power
-	if Input.is_action_pressed("d"):
-		mots[0] += power
-		mots[2] += power
-	if Input.is_action_pressed("q"):
-		mots[1] -= power
-		mots[0] += power
-		mots[2] -= power
-		mots[3] += power
-	if Input.is_action_pressed("e"):
-		mots[0] -= power
-		mots[1] += power
-		mots[2] += power
-		mots[3] -= power
-	if Input.is_action_pressed("up"):
-		mots[0] += power
-		mots[1] += power
-		mots[2] += power
-		mots[3] += power
+		if msg[0] == 'M':
+			var val_strings = msg.right(1).split("/")
+			mots = []
+			for v in val_strings:
+				mots.append((float(v)/100) * power)
 	
 	var torque = 0
 	for i in range(4):

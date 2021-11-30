@@ -45,7 +45,7 @@ points = PoolVector3Array( -5.03125, 0.256299, -5.03125, -5.03125, 0.256299, -3.
 [node name="RigidBody" type="RigidBody" parent="."]
 mass = 0.54
 physics_material_override = SubResource( 1 )
-gravity_scale = 2.24
+gravity_scale = 4.0
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_group_": true

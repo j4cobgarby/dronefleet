@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import socket
+import threading
 
 # |y (up)
 # |   
@@ -36,12 +37,23 @@ class DroneServer:
         self.sock = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
         self.sock.bind(("127.0.0.1", port))
         print("Server listening.")
+        
+        self.thr = threading.Thread(target=self.run, args=())
+        self.thr.start()
+
+        while True:
+            for dr in self.drones:
+                s = input()
+                vals = s.split(" ")
+                self.sock.sendto(bytes("M"+"/".join(vals), "ascii"), dr.addr)
 
     def run(self):
         while (True):
             recv = self.sock.recvfrom(1024)
             msg = bytes.decode(recv[0])
             addr = recv[1]
+
+            print(msg)
 
             # New drone message
             if msg[0] == "N":
@@ -60,6 +72,7 @@ class DroneServer:
                 for d in self.drones:
                     if d.addr == addr:
                         sender = d
+                        break
                 if sender == None:
                     self.sock.sendto(b"BAD", addr)
                 else:
@@ -78,6 +91,7 @@ class DroneServer:
                         print("Invalid data from {}".format(str(addr)))
                     print(str(sender))
 
+            #self.sock.sendto(b"M70/70/70/70", addr)
+
 if __name__ == "__main__":
     srv = DroneServer(14444)
-    srv.run()
