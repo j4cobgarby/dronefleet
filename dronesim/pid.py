@@ -13,13 +13,14 @@ class PidController:
     # reading.
     def compute(self, value):
         t = time.time()
-        dt = t - self.timeprev
-        self.timeprev = t
+        if t - self.timeprev >= self.timeperiod:
+            dt = t - self.timeprev
+            self.timeprev = t
 
-        err_p = self.setpoint
-        self.err_i += dt * err_p
-        err_d = err_p - self.errprev
+            err_p = self.setpoint
+            self.err_i += dt * err_p
+            err_d = err_p - self.errprev
 
-        self.errprev = err_p
+            self.errprev = err_p
 
-        return kp * err_p + ki * err_i + kd * err_d
+        return self.kp * err_p + self.ki * err_i + self.kd * err_d

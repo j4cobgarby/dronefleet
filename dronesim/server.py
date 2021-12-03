@@ -3,7 +3,6 @@ import socket
 import threading
 
 from drone import *
-from pid import *
 
 def typr_to_motors(thrust, yaw, pitch, roll):
     return [
