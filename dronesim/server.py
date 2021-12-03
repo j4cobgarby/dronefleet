@@ -2,34 +2,16 @@
 import socket
 import threading
 
-# |y (up)
-# |   
-# |    / z (forwards)
-# |  /
-# |/
-#  \
-#    \
-#      \ x (right)
+from drone import *
+from pid import *
 
-class Drone:
-    def __init__(self, addr):
-        self.addr = addr
-        self.following_target = False
-        self.target_pos = [0,0,0]
-        self.target_heading = 0
-        
-        self.accelerometer = [0,0,0]
-        self.gyroscope = [0,0,0]
-        self.barometer = 0
-        self.gps = [0,0]
-
-    def __str__(self):
-        return "===\naddr: {}\naccl: {}\ngyro: {}\nbaro: {}\ngps: {}".format(
-                str(self.addr),
-                str(self.accelerometer),
-                str(self.gyroscope),
-                str(self.barometer),
-                str(self.gps))
+def typr_to_motors(thrust, yaw, pitch, roll):
+    return [
+          yaw + pitch + roll + thrust,
+        - yaw + pitch - roll + thrust,
+        - yaw - pitch + roll + thrust,
+          yaw - pitch - roll + thrust
+    ]
 
 class DroneServer:
     def __init__(self, port, max_drones=32):
@@ -42,10 +24,13 @@ class DroneServer:
         self.thr.start()
 
         while True:
-            for dr in self.drones:
-                s = input()
-                vals = s.split(" ")
-                self.sock.sendto(bytes("M"+"/".join(vals), "ascii"), dr.addr)
+            input()
+            for drone in self.drones:
+                drone.set_motors(self.sock, [50,50,50,50])
+            # for dr in self.drones:
+            #     s = input()
+            #     vals = s.split(" ")
+            #     self.sock.sendto(bytes("M"+"/".join(vals), "ascii"), dr.addr)
 
     def run(self):
         while (True):
