@@ -45,7 +45,6 @@ class DroneServer:
                     print("New drone added (total: {})".format(len(self.drones)))
             # Sensors
             # e.g. SGX/X/X:AX/X/X:BX:PX/X
-            print(msg)
             if msg[0] == "S":
                 sender = None
                 for d in self.drones:

@@ -41,7 +41,7 @@ class Drone:
         self.gps = [0,0]
         self.ypr = [0,0,0]
         
-        self.pid_yaw   = PidController(30,10,5,    0,  10, -100,100)
+        self.pid_yaw   = PidController(6,4,5,    0,  10, -100,100)
         self.pid_pitch = PidController(5,1,8,    0,  10, -100,100)
         self.pid_roll  = PidController(5,1,8,    0,  10, -100,100)
         self.pid_alt   = PidController(5,1,7.5,  15, 10, -100,100)
