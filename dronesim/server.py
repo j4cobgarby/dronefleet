@@ -4,14 +4,6 @@ import threading
 
 from drone import *
 
-def typr_to_motors(thrust, yaw, pitch, roll):
-    return [
-          yaw + pitch + roll + thrust,
-        - yaw + pitch - roll + thrust,
-        - yaw - pitch + roll + thrust,
-          yaw - pitch - roll + thrust
-    ]
-
 class DroneServer:
     def __init__(self, port, max_drones=32):
         self.drones = []
@@ -23,9 +15,10 @@ class DroneServer:
         self.thr.start()
 
         while True:
-            input()
+            #input()
             for drone in self.drones:
-                drone.set_motors(self.sock, [50,50,50,50])
+                drone.compute(self.sock)
+            time.sleep(0.1)
             # for dr in self.drones:
             #     s = input()
             #     vals = s.split(" ")
@@ -37,7 +30,8 @@ class DroneServer:
             msg = bytes.decode(recv[0])
             addr = recv[1]
 
-            print(msg)
+            #print(msg)
+
 
             # New drone message
             if msg[0] == "N":
@@ -51,6 +45,7 @@ class DroneServer:
                     print("New drone added (total: {})".format(len(self.drones)))
             # Sensors
             # e.g. SGX/X/X:AX/X/X:BX:PX/X
+            print(msg)
             if msg[0] == "S":
                 sender = None
                 for d in self.drones:
@@ -71,9 +66,13 @@ class DroneServer:
                                 sender.barometer = float(sens[1:])
                             if sens[0] == "P": # GPS
                                 sender.gps = [float(n) for n in sens[1:].split("/")]
+                            if sens[0] == "R": # Rotation (yaw/pitch/roll)
+                                sender.ypr = [float(n) for n in sens[1:].split("/")]
+                            if sens[0] == "T": # Translation
+                                sender.translation = [float(n) for n in sens[1:].split("/")]
                     except Exception:
-                        print("Invalid data from {}".format(str(addr)))
-                    print(str(sender))
+                        print("Invalid data from {}: {}".format(str(addr), msg))
+                    #print(str(sender))
 
             #self.sock.sendto(b"M70/70/70/70", addr)
 

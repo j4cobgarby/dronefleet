@@ -19,6 +19,12 @@ The format for each sensor can be one of:
     Position:
     PX/Z
 
+    Absolute Rotation:
+    RYAW/PITCH/ROLL
+
+    Absolute Position (Translation):
+    TX/Y/Z
+
 So, a possible message would be:
 
     SG1.2/6/2.3:A0/0/2

@@ -45,6 +45,11 @@ func add_force_local(force: Vector3, pos: Vector3):
 	self.add_force(force_local, pos_local)
 
 func _physics_process(delta):
+	if Input.is_key_pressed(KEY_Q):
+		add_torque(Vector3(0,50,0))
+	if Input.is_key_pressed(KEY_W):
+		print(self.translation)
+
 	if v0 and a0:
 		linacc = (self.linear_velocity - v0) / delta
 		rotacc = (self.angular_velocity - a0) / delta
@@ -55,6 +60,8 @@ func _physics_process(delta):
 				+ "/" + str(self.translation[2])
 				+ ":G" + str(self.rotacc[0]) + "/" + str(self.rotacc[1]) + "/" + str(self.rotacc[2])
 				+ ":A" + str(self.linacc[0]) + "/" + str(self.linacc[1]) + "/" + str(self.linacc[2])
+				+ ":R" + str(self.rotation[1]) + "/" + str(self.rotation[0]) + "/" + str(self.rotation[2])
+				+ ":T" + str(self.translation[0]) + "/" + str(self.translation[1]) + "/" + str(self.translation[2])
 				).to_ascii())
 			send_elapsed = 0
 	v0 = self.linear_velocity
@@ -62,12 +69,12 @@ func _physics_process(delta):
 	
 	for i in range(sock.get_available_packet_count()):
 		var msg = sock.get_packet().get_string_from_ascii()
-		print("From server: ", msg)
+		#print("From server: ", msg)
 		if msg[0] == 'M':
 			var val_strings = msg.right(1).split("/")
 			mots = []
 			for v in val_strings:
-				mots.append((float(v)/100) * power)
+				mots.append((max(min(float(v), 100),0)/100) * power)
 	
 	var torque = 0
 	for i in range(4):
@@ -75,4 +82,3 @@ func _physics_process(delta):
 		torque += mots[i] * mot_dirs[i]
 		add_force_local(Vector3(0,mots[i],0), mot_offsets[i])
 	add_torque(Vector3(0,torque,0))
-
