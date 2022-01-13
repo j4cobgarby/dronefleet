@@ -6,7 +6,7 @@ var server_port = 14444
 var sock = PacketPeerUDP.new()
 var registered = false
 var send_elapsed = 0
-var sensrate = 10
+var sensrate = 20
 
 # Linear acceleration
 var linacc
@@ -16,6 +16,7 @@ var rotacc
 # For calculating acceleration
 var v0 # prev velocity (x,y,z)
 var a0 # prev angular vel (around x,y,z)
+var acc_set = false
 
 var mots = [
 	0,0,
@@ -50,7 +51,7 @@ func _physics_process(delta):
 	if Input.is_key_pressed(KEY_W):
 		print(self.translation)
 
-	if v0 and a0:
+	if acc_set:
 		linacc = (self.linear_velocity - v0) / delta
 		rotacc = (self.angular_velocity - a0) / delta
 		
@@ -66,19 +67,25 @@ func _physics_process(delta):
 			send_elapsed = 0
 	v0 = self.linear_velocity
 	a0 = self.angular_velocity
+	acc_set = true
 	
+	var done = false
+	#print(sock.get_available_packet_count())
 	for i in range(sock.get_available_packet_count()):
 		var msg = sock.get_packet().get_string_from_ascii()
-		#print("From server: ", msg)
-		if msg[0] == 'M':
-			var val_strings = msg.right(1).split("/")
-			mots = []
-			for v in val_strings:
-				mots.append((max(min(float(v), 100),0)/100) * power)
+
+		if not done:
+			#print("From server: ", msg)
+			if msg[0] == 'M':
+				var val_strings = msg.right(1).split("/")
+				mots = []
+				for v in val_strings:
+					mots.append((max(min(float(v), 100),0)/100) * power)
+			done = true
 	
 	var torque = 0
 	for i in range(4):
 		if mots[i] < 0: mots[i] = 0
-		torque += mots[i] * mot_dirs[i]
+		torque += mots[i] * mot_dirs[i] * 20
 		add_force_local(Vector3(0,mots[i],0), mot_offsets[i])
 	add_torque(Vector3(0,torque,0))

@@ -8,7 +8,7 @@
 #      \ x (right)
 
 '''
-
+  front
 A       B
   \   /
     X
@@ -21,10 +21,10 @@ from pid import *
 
 def typr_to_motors(thrust, yaw, pitch, roll):
     return [
-          yaw + pitch + roll + thrust,
-        - yaw + pitch - roll + thrust,
-        - yaw - pitch + roll + thrust,
-          yaw - pitch - roll + thrust
+          yaw - pitch + roll + thrust,
+        - yaw - pitch - roll + thrust,
+        - yaw + pitch + roll + thrust,
+          yaw + pitch - roll + thrust
     ]
 
 class Drone:
@@ -41,10 +41,10 @@ class Drone:
         self.gps = [0,0]
         self.ypr = [0,0,0]
         
-        self.pid_yaw   = PidController(6,4,5,    0,  10, -100,100)
-        self.pid_pitch = PidController(5,1,8,    0,  10, -100,100)
-        self.pid_roll  = PidController(5,1,8,    0,  10, -100,100)
-        self.pid_alt   = PidController(5,1,7.5,  15, 10, -100,100)
+        self.pid_yaw   = PidController(1.5,0.2,80,   0,  50, -200,200)
+        self.pid_pitch = PidController(9,5,8,     0,  20,  -200,200)
+        self.pid_roll  = PidController(5,0,5,     0,  50,  -200,200)
+        self.pid_alt   = PidController(8,3,200,  15, 50,   -200,200)
 
     def __str__(self):
         return "===\naddr: {}\naccl: {}\ngyro: {}\nbaro: {}\ngps: {}\nyaw/pitch/roll: {}".format(
@@ -63,8 +63,12 @@ class Drone:
         #print("Alt: " + str(self.translation[1]))
         yaw = self.pid_yaw.compute(self.ypr[0])
         pitch = self.pid_pitch.compute(self.ypr[1])
-        roll = self.pid_pitch.compute(self.ypr[2])
+        roll = self.pid_roll.compute(self.ypr[2])
         thrust = self.pid_alt.compute(self.translation[1])
-        
-        self.set_motors(sock, typr_to_motors(thrust, yaw, 0, 0))
+        #print("Pitch: {} -> {} = {}".format(self.ypr[1], self.pid_pitch.setpoint, pitch))
+        #print("Alt: {} -> {} = {}".format(self.translation[1], self.pid_alt.setpoint, thrust))
+        #print(self.translation[1], end=",", flush=True)
+        mots = typr_to_motors(thrust, yaw, pitch, roll)
+        mots = [round(m, 3) for m in mots]
+        self.set_motors(sock, mots)
         #print("Yaw: {}".format(yaw))

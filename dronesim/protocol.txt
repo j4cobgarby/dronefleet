@@ -1,7 +1,9 @@
 DRONE to SERVER:
 
-The character 'S' followed by values from any sensors the drone wants to send, 
-separated by ':' characters, like this:
+A newly connecting drone can send the character 'N' to the server to register itself.
+
+Also, a drone can send the character 'S' followed by values from any sensors the
+drone wants to send, separated by ':' characters, like this:
 
     S{sensor}:...:{sensor}
 

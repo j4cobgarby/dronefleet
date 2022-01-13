@@ -1,0 +1,4 @@
+how does a pid controller work roughly
+the overview of the control system (with diagram)
+brief design of classes
+why i wrote it in python

@@ -4,7 +4,7 @@
 [ext_resource path="res://Drone.gd" type="Script" id=2]
 
 [sub_resource type="PhysicsMaterial" id=1]
-friction = 0.09
+friction = 0.0
 bounce = 0.1
 
 [sub_resource type="SpatialMaterial" id=2]
