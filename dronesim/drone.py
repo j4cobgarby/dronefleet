@@ -42,8 +42,8 @@ class Drone:
         self.ypr = [0,0,0]
         
         self.pid_yaw   = PidController(1.5,0.2,80,   0,  50, -200,200)
-        self.pid_pitch = PidController(9,5,8,     0,  20,  -200,200)
-        self.pid_roll  = PidController(5,0,5,     0,  50,  -200,200)
+        self.pid_pitch = PidController(10,1,200,     0,  20,  -200,200)
+        self.pid_roll  = PidController(10,1,200,     0,  50,  -200,200)
         self.pid_alt   = PidController(8,3,200,  15, 50,   -200,200)
 
     def __str__(self):

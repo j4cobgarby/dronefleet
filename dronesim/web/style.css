@@ -1,0 +1,45 @@
+body {
+    background-color: black;
+    color: lightgray;
+    font-family: monospace;
+}
+
+h1 {
+    text-align: center;
+}
+
+table {
+    width: 100%;
+    border: 0;
+}
+
+th {
+    text-align: left;
+    background-color: #202020;
+}
+
+td.layout {
+    background-color: #262626;
+    width: 50%;
+    vertical-align: top;
+}
+
+div.radar {
+    border: 2px solid gray;
+    min-height: 300px;
+    text-align: center;
+}
+
+div.pid {
+    border: 2px solid gray;
+    min-height: 300px;
+}
+
+canvas {
+    border: 2px solid black;
+    display: inline;
+}
+
+footer {
+    color: #808080;
+}

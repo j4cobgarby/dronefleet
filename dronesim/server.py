@@ -37,6 +37,9 @@ class DroneServer:
                 if inps[0] == "r":
                     for drone in self.drones:
                         drone.pid_roll.setpoint = inps[1]
+                if inps[0] == "a":
+                    for drone in self.drones:
+                        drone.pid_alt.setpoint = inps[1]
                 #set_alt = float(inp)
                 #for drone in self.drones:
                 #    drone.pid_alt.setpoint = set_alt

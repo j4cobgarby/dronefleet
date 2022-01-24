@@ -1,0 +1,53 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Drone Control Panel</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+</head>
+<body onload="init();">
+    <h1>Drone Fleet Control Panel</h1>
+    <table>
+        <tr>
+            <td class="layout">
+                <span>Radar</span>
+                <div class="radar">
+                    <canvas id="radarcanvas" width="600" height="600"></canvas>
+                </div>
+            </td>
+            <td class="layout">
+                <span>PID Channels</span>
+                <div class="pid">
+
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="layout">
+                
+                <table class="dronelist">
+                    <tr>
+                        <th>Drone</th>
+                        <th>Ping</th>
+                        <th>Position (x, y, z)</th>
+                        <th>Rotation (&psi;, &theta;, &phi;)</th>
+                        <th>Press to view</th>
+                    </tr>
+                    <tr>
+                        <td>#0</td>
+                        <td>30ms</td>
+                        <td>0, 0, 15</td>
+                        <td>0, 0, 0</td>
+                        <td><button>Details</button></td>
+                    </tr>
+                </table>
+
+            </td>
+        </tr>
+    </table>
+
+    <footer>
+        Source for this control panel is available at <a href="https://github.com/j4cobgarby/dronefleet">GitHub</a>.
+    </footer>
+</body>
+</html>

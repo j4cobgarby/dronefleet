@@ -71,7 +71,7 @@ func _physics_process(delta):
 	
 	var done = false
 	#print(sock.get_available_packet_count())
-	for i in range(sock.get_available_packet_count()):
+	for _i in range(sock.get_available_packet_count()):
 		var msg = sock.get_packet().get_string_from_ascii()
 
 		if not done:
@@ -89,3 +89,6 @@ func _physics_process(delta):
 		torque += mots[i] * mot_dirs[i] * 20
 		add_force_local(Vector3(0,mots[i],0), mot_offsets[i])
 	add_torque(Vector3(0,torque,0))
+
+	get_parent().get_parent().get_node("Camera").translation.x = self.translation.x
+	get_parent().get_parent().get_node("Camera").translation.z = self.translation.z - 50
