@@ -1,7 +1,7 @@
 import time
 
 class PidController:
-    def __init__(self, kp, ki, kd, setpoint, freq, minval, maxval):
+    def __init__(self, kp, ki, kd, setpoint, freq, minval, maxval, dowrap=False, minwrap=0, maxwrap=0):
         self.kp = kp
         self.ki = ki
         self.kd = kd
@@ -13,6 +13,9 @@ class PidController:
         self.errprev = 0 # Previous error
         self.timeprev = time.time()
         self.output = 0
+        self.dowrap = dowrap
+        self.minwrap = minwrap
+        self.maxwrap = maxwrap
 
     # Performs the PID algorithm with the 'value' parameter as the input
     # reading.
@@ -23,6 +26,18 @@ class PidController:
             self.timeprev = t
 
             err_p = self.setpoint - value
+            if self.dowrap:
+                err_left = (self.minwrap - value) + (self.setpoint - self.maxwrap) # Error of: value -> left bound (right bound) -> setpoint
+                err_right = (self.setpoint - self.minwrap) + (self.maxwrap - value) # Error of: value -> right bound (left bound) -> setpoint
+                err_abs = {abs(err_p):err_p, abs(err_left):err_left, abs(err_right):err_right}
+
+                
+                err_p = err_abs[min(err_abs)]
+                print(f"{round(value, 3)} -> {round(self.setpoint, 3)} = {round(err_p, 3)}")
+
+
+                #err_p = min([err_p, err_left, err_right])
+
             self.err_i += dt * err_p
             err_d = err_p - self.errprev
 

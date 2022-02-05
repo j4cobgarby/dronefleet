@@ -61,7 +61,7 @@ func _physics_process(delta):
 				+ "/" + str(self.translation[2])
 				+ ":G" + str(self.rotacc[0]) + "/" + str(self.rotacc[1]) + "/" + str(self.rotacc[2])
 				+ ":A" + str(self.linacc[0]) + "/" + str(self.linacc[1]) + "/" + str(self.linacc[2])
-				+ ":R" + str(self.rotation[1]) + "/" + str(self.rotation[0]) + "/" + str(self.rotation[2])
+				+ ":R" + str(self.rotation[1] + 3.14159) + "/" + str(self.rotation[0]) + "/" + str(self.rotation[2])
 				+ ":T" + str(self.translation[0]) + "/" + str(self.translation[1]) + "/" + str(self.translation[2])
 				).to_ascii())
 			send_elapsed = 0

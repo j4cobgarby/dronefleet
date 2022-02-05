@@ -18,6 +18,7 @@ C       D
 '''
 
 from pid import *
+import math
 
 def typr_to_motors(thrust, yaw, pitch, roll):
     return [
@@ -41,7 +42,7 @@ class Drone:
         self.gps = [0,0]
         self.ypr = [0,0,0]
         
-        self.pid_yaw   = PidController(1.5,0.2,80,   0,  50, -200,200)
+        self.pid_yaw   = PidController(1.5,0.2,80,   math.pi,  50, -200,200, True, 0, 2 * math.pi)
         self.pid_pitch = PidController(10,1,200,     0,  20,  -200,200)
         self.pid_roll  = PidController(10,1,200,     0,  50,  -200,200)
         self.pid_alt   = PidController(8,3,200,  15, 50,   -200,200)
@@ -71,4 +72,4 @@ class Drone:
         mots = typr_to_motors(thrust, yaw, pitch, roll)
         mots = [round(m, 3) for m in mots]
         self.set_motors(sock, mots)
-        #print("Yaw: {}".format(yaw))
+        #print(f"yaw: {self.ypr[0]}")
