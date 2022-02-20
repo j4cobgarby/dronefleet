@@ -1,7 +1,8 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://drone.obj" type="ArrayMesh" id=1]
 [ext_resource path="res://Drone.gd" type="Script" id=2]
+[ext_resource path="res://DroneContainer.gd" type="Script" id=3]
 
 [sub_resource type="PhysicsMaterial" id=1]
 friction = 0.0
@@ -41,6 +42,7 @@ points = PoolVector3Array( -3.90625, -0.24375, -3.96875, -3.90625, -0.24375, -3.
 points = PoolVector3Array( -5.03125, 0.256299, -5.03125, -5.03125, 0.256299, -3.9688, -4.98493, -0.2, -4.96949, -4.97508, -0.1907, -4, -4.90615, 0.81875, -4.40605, -4.69505, 0.768429, -4.79047, -4.59363, 0.81875, -4.09375, -4.58034, 0.762213, -4.83965, -4.41315, 0.760534, -4.83767, -4.28143, 0.81875, -4.15645, -4.0939, 0.81875, -4.59355, -4.0939, 0.81875, -4.40605, -4.00997, -0.2, -4.96949, -3.9688, -0.24375, -3.53125, -3.9688, 0.256299, -5.03125, -3.9688, 0.256299, -3.53125, -3.90625, -0.24375, -4.03135, -3.90625, -0.24375, -3.53125, -3.90625, 0.256299, -4.03135, -3.90625, 0.256299, -3.53125 )
 
 [node name="Drone" type="Spatial"]
+script = ExtResource( 3 )
 
 [node name="RigidBody" type="RigidBody" parent="."]
 mass = 0.54

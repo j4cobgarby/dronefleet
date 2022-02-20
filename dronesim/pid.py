@@ -31,12 +31,7 @@ class PidController:
                 err_right = (self.setpoint - self.minwrap) + (self.maxwrap - value) # Error of: value -> right bound (left bound) -> setpoint
                 err_abs = {abs(err_p):err_p, abs(err_left):err_left, abs(err_right):err_right}
 
-                
                 err_p = err_abs[min(err_abs)]
-                print(f"{round(value, 3)} -> {round(self.setpoint, 3)} = {round(err_p, 3)}")
-
-
-                #err_p = min([err_p, err_left, err_right])
 
             self.err_i += dt * err_p
             err_d = err_p - self.errprev

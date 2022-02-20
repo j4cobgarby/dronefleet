@@ -60,16 +60,10 @@ class Drone:
         sock.sendto(bytes("M"+"/".join([str(x) for x in mots]), "ascii"), self.addr)
 
     def compute(self, sock):
-        #print(self.ypr[0])
-        #print("Alt: " + str(self.translation[1]))
         yaw = self.pid_yaw.compute(self.ypr[0])
         pitch = self.pid_pitch.compute(self.ypr[1])
         roll = self.pid_roll.compute(self.ypr[2])
         thrust = self.pid_alt.compute(self.translation[1])
-        #print("Pitch: {} -> {} = {}".format(self.ypr[1], self.pid_pitch.setpoint, pitch))
-        #print("Alt: {} -> {} = {}".format(self.translation[1], self.pid_alt.setpoint, thrust))
-        #print(self.translation[1], end=",", flush=True)
         mots = typr_to_motors(thrust, yaw, pitch, roll)
         mots = [round(m, 3) for m in mots]
         self.set_motors(sock, mots)
-        #print(f"yaw: {self.ypr[0]}")

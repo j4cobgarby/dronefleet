@@ -40,19 +40,8 @@ class DroneServer:
                 if inps[0] == "a":
                     for drone in self.drones:
                         drone.pid_alt.setpoint = inps[1]
-                #set_alt = float(inp)
-                #for drone in self.drones:
-                #    drone.pid_alt.setpoint = set_alt
 
         self.log_file.close()
-
-            # for drone in self.drones:
-            #     drone.compute(self.sock)
-            #time.sleep(0.1)
-            # for dr in self.drones:
-            #     s = input()
-            #     vals = s.split(" ")
-            #     self.sock.sendto(bytes("M"+"/".join(vals), "ascii"), dr.addr)
 
     def compute_drones(self):
         while True:
@@ -100,17 +89,11 @@ class DroneServer:
                                 sender.gps = [float(n) for n in sens[1:].split("/")]
                             if sens[0] == "R": # Rotation (yaw/pitch/roll)
                                 sender.ypr = [float(n) for n in sens[1:].split("/")]
-                                self.log_file.write("(" + str(round(time.time() - self.plot_t0, 3)) + "," + str(round(sender.ypr[0], 3)) + "), ")
-                                #print("(" + str(round(time.time() - self.plot_t0, 3)) + "," + str(round(sender.ypr[0], 3)), end="), ", flush=True)
+                                #self.log_file.write("(" + str(round(time.time() - self.plot_t0, 3)) + "," + str(round(sender.ypr[0], 3)) + "), ")
                             if sens[0] == "T": # Translation
                                 sender.translation = [float(n) for n in sens[1:].split("/")]
-                                #self.log_file.write("(" + str(round(time.time() - self.plot_t0, 3)) + "," + str(round(sender.translation[1], 3)) + "), ")
-                                #print("(" + str(round(time.time() - self.plot_t0, 3)) + "," + str(round(sender.translation[1], 3)), end="), ", flush=True)
                     except Exception:
                         print("Invalid data from {}: {}".format(str(addr), msg))
-                    #print(str(sender))
-
-            #self.sock.sendto(b"M70/70/70/70", addr)
 
 if __name__ == "__main__":
     srv = DroneServer(14444)

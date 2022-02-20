@@ -34,7 +34,7 @@ var mot_offsets = [
 ]
 
 func _ready():
-	if sock.listen(14445, server_addr) != OK:
+	if sock.listen(get_parent().client_port, server_addr) != OK:
 		print("Error listening")
 	else:
 		sock.set_dest_address(server_addr, server_port)
