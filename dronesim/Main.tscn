@@ -49,5 +49,5 @@ fov = 87.9
 far = 1660.0
 
 [node name="Drone2" parent="." instance=ExtResource( 1 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -7.07369, 6.24356, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.999624, 6.24356, 0 )
 client_port = 14446

@@ -19,6 +19,7 @@ C       D
 
 from pid import *
 import math
+import json
 
 def typr_to_motors(thrust, yaw, pitch, roll):
     return [
@@ -46,6 +47,9 @@ class Drone:
         self.pid_pitch = PidController(10,1,200,     0,  20,  -200,200)
         self.pid_roll  = PidController(10,1,200,     0,  50,  -200,200)
         self.pid_alt   = PidController(8,3,200,  15, 50,   -200,200)
+
+    def get_json(self):
+      
 
     def __str__(self):
         return "===\naddr: {}\naccl: {}\ngyro: {}\nbaro: {}\ngps: {}\nyaw/pitch/roll: {}".format(

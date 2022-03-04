@@ -2,15 +2,23 @@
 import socket
 import threading
 import time
+from websocket_server import WebsocketServer
 
 from drone import *
+
+def ws_callback_new_client(client, server):
+    print(f"WS: New client.")
+    server.send_message(client, "Welcome!")
+
+def ws_callback_client_left(client, server):
+    print(f"WS: Client has left.")
 
 class DroneServer:
     def __init__(self, port, max_drones=32):
         self.drones = []
         self.sock = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
         self.sock.bind(("127.0.0.1", port))
-        print("Server listening.")
+        print("Drone control server listening.")
         self.plot_t0 = time.time()
 
         self.log_file = open("pid_log.txt", "w+")
@@ -20,6 +28,12 @@ class DroneServer:
 
         self.thr2 = threading.Thread(target=self.compute_drones, args=())
         self.thr2.start()
+
+        self.ws_server = WebsocketServer(host="127.0.0.1", port=13254)
+        self.ws_server.set_fn_new_client(ws_callback_new_client)
+        self.ws_server.set_fn_client_left(ws_callback_client_left)
+        self.ws_server.run_forever(threaded=True)
+        print("Control panel server listening.")
 
         while True:
             inp = input()
@@ -96,4 +110,5 @@ class DroneServer:
                         print("Invalid data from {}: {}".format(str(addr), msg))
 
 if __name__ == "__main__":
+    print("Drone Fleet Controller v1, https://github.com/j4cobgarby/dronefleet")
     srv = DroneServer(14444)

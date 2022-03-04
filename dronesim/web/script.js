@@ -1,5 +1,10 @@
 var cradar;
 var cpid;
+let socket = new WebSocket("ws://127.0.0.1:13254")
+
+socket.onmessage = function(event) {
+    console.log(event.data);
+}
 
 function init() {
     cradar = document.getElementById("radarcanvas");
