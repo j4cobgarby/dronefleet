@@ -21,6 +21,8 @@ class DroneServer:
         print("Drone control server listening.")
         self.plot_t0 = time.time()
 
+        self.d_id = 0
+
         self.log_file = open("pid_log.txt", "w+")
         
         self.thr = threading.Thread(target=self.run, args=())
@@ -57,11 +59,22 @@ class DroneServer:
 
         self.log_file.close()
 
+    def get_unique_id(self):
+        self.d_id += 1
+        return self.d_id
+
     def compute_drones(self):
         while True:
             time.sleep(1/50)
             for drone in self.drones:
                 drone.compute(self.sock)
+            json_msg = {
+                "drones_count": len(self.drones),
+                "drones": [
+                    d.get_json() for d in self.drones
+                ]
+            }
+            print(json_msg)
 
     def run(self):
         while (True):
@@ -76,7 +89,7 @@ class DroneServer:
                     if d.addr == addr:
                         create = False
                 if create:
-                    self.drones.append(Drone(addr))
+                    self.drones.append(Drone(addr, self.get_unique_id()))
                     self.sock.sendto(b"OK", addr)
                     print("New drone added (total: {})".format(len(self.drones)))
             # Sensors

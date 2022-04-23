@@ -70,12 +70,11 @@ func _physics_process(delta):
 	acc_set = true
 	
 	var done = false
-	#print(sock.get_available_packet_count())
+
 	for _i in range(sock.get_available_packet_count()):
 		var msg = sock.get_packet().get_string_from_ascii()
 
 		if not done:
-			#print("From server: ", msg)
 			if msg[0] == 'M':
 				var val_strings = msg.right(1).split("/")
 				mots = []

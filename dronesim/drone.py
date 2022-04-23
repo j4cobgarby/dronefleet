@@ -30,7 +30,9 @@ def typr_to_motors(thrust, yaw, pitch, roll):
     ]
 
 class Drone:
-    def __init__(self, addr):
+    def __init__(self, addr, id):
+        self.id = id
+      
         self.addr = addr
         self.following_target = False
         self.target_pos = [0,0,0]
@@ -49,7 +51,11 @@ class Drone:
         self.pid_alt   = PidController(8,3,200,  15, 50,   -200,200)
 
     def get_json(self):
-      
+        return json.dumps({
+            "id": self.id,
+            "pos": self.translation,
+            "rot": self.ypr
+        })
 
     def __str__(self):
         return "===\naddr: {}\naccl: {}\ngyro: {}\nbaro: {}\ngps: {}\nyaw/pitch/roll: {}".format(
