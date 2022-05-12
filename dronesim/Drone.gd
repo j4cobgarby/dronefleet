@@ -50,7 +50,6 @@ func _physics_process(delta):
 		add_torque(Vector3(0,50,0))
 	if Input.is_key_pressed(KEY_W):
 		print(self.translation)
-
 	if acc_set:
 		linacc = (self.linear_velocity - v0) / delta
 		rotacc = (self.angular_velocity - a0) / delta

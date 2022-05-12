@@ -2,20 +2,13 @@
 import socket
 import threading
 import time
-from websocket_server import WebsocketServer
 
 from drone import *
-
-def ws_callback_new_client(client, server):
-    print(f"WS: New client.")
-    server.send_message(client, "Welcome!")
-
-def ws_callback_client_left(client, server):
-    print(f"WS: Client has left.")
 
 class DroneServer:
     def __init__(self, port, max_drones=32):
         self.drones = []
+        self.max_drones = max_drones
         self.sock = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
         self.sock.bind(("127.0.0.1", port))
         print("Drone control server listening.")
@@ -31,33 +24,33 @@ class DroneServer:
         self.thr2 = threading.Thread(target=self.compute_drones, args=())
         self.thr2.start()
 
-        self.ws_server = WebsocketServer(host="127.0.0.1", port=13254)
-        self.ws_server.set_fn_new_client(ws_callback_new_client)
-        self.ws_server.set_fn_client_left(ws_callback_client_left)
-        self.ws_server.run_forever(threaded=True)
-        print("Control panel server listening.")
-
         while True:
             inp = input()
             if inp == "q":
                 break
             else:
+                # <drone id> <value to set> <value>
+                # e.g. 0 a 20 sets altitude of drone 0 to 20
                 inps = inp.split(" ")
-                inps[1] = float(inps[1])
-                if inps[0] == "y":
-                    for drone in self.drones:
-                        drone.pid_yaw.setpoint = inps[1]
-                if inps[0] == "p":
-                    for drone in self.drones:
-                        drone.pid_pitch.setpoint = inps[1]
-                if inps[0] == "r":
-                    for drone in self.drones:
-                        drone.pid_roll.setpoint = inps[1]
-                if inps[0] == "a":
-                    for drone in self.drones:
-                        drone.pid_alt.setpoint = inps[1]
+                value = float(inps[2])
+                drone = None
+                for d in self.drones:
+                    if d.id == int(inps[0]):
+                        drone = d
+                if drone != None:
+                    print(f"Time is {time.time()-self.plot_t0}")
+                    if inps[1] == "y":
+                        drone.pid_yaw.setpoint = value
+                    if inps[1] == "p":
+                        drone.pid_pitch.setpoint = value
+                    if inps[1] == "r":
+                        drone.pid_roll.setpoint = value
+                    if inps[1] == "a":
+                        drone.pid_alt.setpoint = value
 
         self.log_file.close()
+        self.thr.join()
+        self.thr2.join()
 
     def get_unique_id(self):
         self.d_id += 1
@@ -68,13 +61,6 @@ class DroneServer:
             time.sleep(1/50)
             for drone in self.drones:
                 drone.compute(self.sock)
-            json_msg = {
-                "drones_count": len(self.drones),
-                "drones": [
-                    d.get_json() for d in self.drones
-                ]
-            }
-            print(json_msg)
 
     def run(self):
         while (True):
@@ -84,7 +70,7 @@ class DroneServer:
 
             # New drone message
             if msg[0] == "N":
-                create = True
+                create = len(self.drones) < self.max_drones
                 for d in self.drones:
                     if d.addr == addr:
                         create = False
@@ -116,7 +102,7 @@ class DroneServer:
                                 sender.gps = [float(n) for n in sens[1:].split("/")]
                             if sens[0] == "R": # Rotation (yaw/pitch/roll)
                                 sender.ypr = [float(n) for n in sens[1:].split("/")]
-                                #self.log_file.write("(" + str(round(time.time() - self.plot_t0, 3)) + "," + str(round(sender.ypr[0], 3)) + "), ")
+                                self.log_file.write("(" + str(round(time.time() - self.plot_t0, 3)) + "," + str(round(sender.ypr[0], 3)) + "), ")
                             if sens[0] == "T": # Translation
                                 sender.translation = [float(n) for n in sens[1:].split("/")]
                     except Exception:
