@@ -39,7 +39,7 @@ light_energy = 0.84
 shadow_enabled = true
 
 [node name="Drone" parent="." instance=ExtResource( 1 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -16.4623, 4.75553, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -3.29107, 4.75553, 0 )
 
 [node name="Camera" type="Camera" parent="."]
 transform = Transform( -1, 3.26756e-08, -8.10867e-08, 0, 0.927523, 0.373765, 8.74228e-08, 0.373765, -0.927523, 0, 27.443, -51.5424 )
@@ -47,7 +47,3 @@ environment = SubResource( 5 )
 current = true
 fov = 87.9
 far = 1660.0
-
-[node name="Drone2" parent="." instance=ExtResource( 1 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -7.07369, 6.24356, 0 )
-client_port = 14446

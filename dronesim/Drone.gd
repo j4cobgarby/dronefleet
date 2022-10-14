@@ -86,7 +86,7 @@ func _physics_process(delta):
 	var torque = 0
 	for i in range(4):
 		if mots[i] < 0: mots[i] = 0
-		torque += mots[i] * mot_dirs[i] * 20
+		torque += -mots[i] * mot_dirs[i] * 20
 		add_force_local(Vector3(0,mots[i],0), mot_offsets[i])
 	add_torque(Vector3(0,torque,0))
 
